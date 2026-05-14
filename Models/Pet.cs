@@ -12,10 +12,24 @@ namespace PetShopAgendamento.Models
         [Display(Name = "Raça")]
         public string? Raca { get; set; }
 
-        [Required(ErrorMessage = "Porte é obrigatório.")]
-        public required string Porte { get; set; }  // Pequeno, Médio, Grande
+        public enum PorteOpcao
+        {
+            Pequeno,
 
-        public decimal Peso { get; set; }   // precisão configurada no DbContext
+            [Display(Name = "Médio")]
+            Medio,
+
+            Grande
+        }
+
+        [Required(ErrorMessage = "Porte é obrigatório.")]
+        public PorteOpcao Porte { get; set; }
+
+        [Display(Name = "Data de Nascimento")]
+        [DataType(DataType.Date)]
+        public DateTime? DataNascimento { get; set; }
+
+        public decimal? Peso { get; set; }   // precisão configurada no DbContext
 
         [Display(Name = "Observações")]
         public string? Observacoes { get; set; }
