@@ -1,3 +1,5 @@
+@using PetShopAgendamento.Models
+@using PetShopAgendamento.Extensions
 @model IEnumerable<PetShopAgendamento.Models.Agendamento>
 
 @{
@@ -24,6 +26,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Data)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>   <!-- nova coluna -->
             <th></th>
         </tr>
     </thead>
@@ -31,16 +36,31 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Cliente.Endereco)
+                @Html.DisplayFor(modelItem => item.Cliente!.Endereco)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Pet.Nome)
+                @Html.DisplayFor(modelItem => item.Pet!.Nome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Servico.Nome)
+                @Html.DisplayFor(modelItem => item.Servico!.Nome)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Data)
+            </td>
+            <td>
+                <form asp-action="UpdateStatus" method="post" style="display:inline">
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <select name="novoStatus" class="form-control-sm">
+                        @foreach (var status in Enum.GetValues(typeof(StatusAgendamento)))
+                        {
+                            var statusEnum = (StatusAgendamento)status;
+                            <option value="@((int)statusEnum)" selected="@(statusEnum == item.Status)">
+                                @statusEnum.GetDisplayName()
+                            </option>
+                        }
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary">Atualizar</button>
+                </form>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

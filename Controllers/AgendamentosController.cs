@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static PetShopAgendamento.Models.Agendamento;
 
 namespace PetShopAgendamento.Controllers
 {
@@ -173,6 +174,17 @@ namespace PetShopAgendamento.Controllers
         private bool AgendamentoExists(int id)
         {
             return _context.Agendamentos.Any(e => e.Id == id);
+        }
+        public async Task<IActionResult> UpdateStatus(int id, StatusAgendamento novoStatus)
+        {
+            var agendamento = await _context.Agendamentos.FindAsync(id);
+            if (agendamento == null)
+                return NotFound();
+
+            agendamento.Status = novoStatus;
+            _context.Update(agendamento);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

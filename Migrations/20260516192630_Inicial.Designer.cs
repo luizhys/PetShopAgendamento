@@ -12,7 +12,7 @@ using PetShopAgendamento.Data;
 namespace PetShopAgendamento.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260509220419_Inicial")]
+    [Migration("20260516192630_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -43,6 +43,9 @@ namespace PetShopAgendamento.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ServicoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -95,6 +98,9 @@ namespace PetShopAgendamento.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DataNascimento")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -102,13 +108,12 @@ namespace PetShopAgendamento.Migrations
                     b.Property<string>("Observacoes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Peso")
+                    b.Property<decimal?>("Peso")
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("Porte")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Porte")
+                        .HasColumnType("int");
 
                     b.Property<string>("Raca")
                         .HasColumnType("nvarchar(max)");

@@ -4,7 +4,9 @@ namespace PetShopAgendamento.Models
 {
     public enum Perfil
     {
+        [Display(Name = "Administrador")]
         Admin,
+        [Display(Name = "Funcionário")]
         Funcionario
     }
 
