@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PetShopAgendamento.Data;
 using PetShopAgendamento.Models;
+using PetShopAgendamento.Services;
 
 namespace PetShopAgendamento.Controllers
 {
     public class ServicosController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IAgendamentoVerificacaoService _verificacaoService;
 
-        public ServicosController(AppDbContext context)
+        public ServicosController(AppDbContext context, IAgendamentoVerificacaoService verificacaoService)
         {
             _context = context;
+            _verificacaoService = verificacaoService;
         }
 
         // GET: Servicos
@@ -140,12 +143,21 @@ namespace PetShopAgendamento.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var servico = await _context.Servicos.FindAsync(id);
-            if (servico != null)
+            if (servico == null)
             {
-                _context.Servicos.Remove(servico);
+                return NotFound();
             }
 
+            // Verifica se o serviço possui agendamentos
+            if (await _verificacaoService.ServicoPossuiAgendamentosAsync(id))
+            {
+                TempData["ErrorMessage"] = "Não é possível excluir o serviço porque ele possui agendamentos vinculados.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Servicos.Remove(servico);
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Serviço excluído com sucesso.";
             return RedirectToAction(nameof(Index));
         }
 

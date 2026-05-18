@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using PetShopAgendamento.Data;
 using PetShopAgendamento.Models;
+using PetShopAgendamento.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IAgendamentoVerificacaoService, AgendamentoVerificacaoService>();
 
 // Adicionar suporte a sessão (para login)
 builder.Services.AddDistributedMemoryCache();

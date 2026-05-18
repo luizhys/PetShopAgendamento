@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PetShopAgendamento.Data;
 using PetShopAgendamento.Filters;
 using PetShopAgendamento.Models;
+using PetShopAgendamento.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,12 @@ namespace PetShopAgendamento.Controllers
     public class ClientesController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IAgendamentoVerificacaoService _verificacaoService;
 
-        public ClientesController(AppDbContext context)
+        public ClientesController(AppDbContext context, IAgendamentoVerificacaoService verificacaoService)
         {
             _context = context;
+            _verificacaoService = verificacaoService;
         }
 
         // GET: Clientes
@@ -142,12 +145,17 @@ namespace PetShopAgendamento.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente != null)
+            if (cliente == null) return NotFound();
+
+            if (await _verificacaoService.ClientePossuiAgendamentosOuPetsAsync(id))
             {
-                _context.Clientes.Remove(cliente);
+                TempData["ErrorMessage"] = "Cliente possui agendamentos ou pets. Exclusão não permitida.";
+                return RedirectToAction(nameof(Index));
             }
 
+            _context.Clientes.Remove(cliente);
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Cliente excluído com sucesso.";
             return RedirectToAction(nameof(Index));
         }
 
