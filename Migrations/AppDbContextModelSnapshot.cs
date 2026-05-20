@@ -95,9 +95,6 @@ namespace PetShopAgendamento.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DataNascimento")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

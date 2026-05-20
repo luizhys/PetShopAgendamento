@@ -70,7 +70,6 @@ namespace PetShopAgendamento.Migrations
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Raca = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Porte = table.Column<int>(type: "int", nullable: false),
-                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Peso = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: true),
                     Observacoes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClienteId = table.Column<int>(type: "int", nullable: false)

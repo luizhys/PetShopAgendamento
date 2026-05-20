@@ -25,10 +25,6 @@ namespace PetShopAgendamento.Models
         [Required(ErrorMessage = "Porte é obrigatório.")]
         public PorteOpcao Porte { get; set; }
 
-        [Display(Name = "Data de Nascimento")]
-        [DataType(DataType.Date)]
-        public DateTime? DataNascimento { get; set; }
-
         public decimal? Peso { get; set; }   // precisão configurada no DbContext
 
         [Display(Name = "Observações")]

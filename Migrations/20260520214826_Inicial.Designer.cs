@@ -12,7 +12,7 @@ using PetShopAgendamento.Data;
 namespace PetShopAgendamento.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260516192630_Inicial")]
+    [Migration("20260520214826_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -97,9 +97,6 @@ namespace PetShopAgendamento.Migrations
 
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("DataNascimento")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nome")
                         .IsRequired()
