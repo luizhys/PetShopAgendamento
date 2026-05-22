@@ -36,7 +36,7 @@ app.UseAuthorization();    // ← Depois autorização (se houver)
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 // Seed: criar admin padrão se não existir

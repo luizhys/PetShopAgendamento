@@ -1,0 +1,96 @@
+﻿/* login.css - estilos exclusivos para a tela de login */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 700; /* Define o range de pesos que a variável suporta */
+    src: url('/fonts/Inter-Italic-VariableFont_opsz,wght.woff2') format('woff2');
+    src: url('/fonts/Inter-VariableFont_opsz,wght.woff2') format('woff2');
+    font-display: swap;
+}
+
+body {
+    background: #e0f2fe;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 380px;
+    border-radius: 16px;
+    background: white;
+    margin: 1rem;
+}
+
+.login-icon {
+    width: 56px;
+    height: 56px;
+    background: #0d9488;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin: 0 auto 14px;
+}
+
+.btn-entrar {
+    background: #0d9488;
+    color: #fff;
+    border: none;
+    width: 100%;
+    padding: 11px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s;
+}
+
+    .btn-entrar:hover {
+        background: #0f766e;
+        color: #fff;
+    }
+
+.form-label {
+    font-size: 12px;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;
+    font-size: 13px;
+}
+
+    .form-control:focus {
+        border-color: #0d9488;
+        box-shadow: 0 0 0 2px rgba(13,148,136,0.1);
+    }
+
+.text-erro {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.credenciais-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.6;
+}

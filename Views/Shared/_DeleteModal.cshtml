@@ -1,0 +1,46 @@
+﻿<!-- Modal genérico de confirmação de exclusão -->
+<div class="modal fade" id="genericDeleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteModalMessage">Tem certeza que deseja excluir este registro?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="deleteItemId" />
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var deleteModal = document.getElementById('genericDeleteModal');
+        if (deleteModal) {
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget; // elemento que abriu o modal
+                var id = button.getAttribute('data-id');
+                var nome = button.getAttribute('data-nome');
+                var actionUrl = button.getAttribute('data-action-url');
+
+                var message = document.getElementById('deleteModalMessage');
+                if (nome) {
+                    message.innerText = 'Tem certeza que deseja excluir "' + nome + '"? Esta ação não pode ser desfeita.';
+                } else {
+                    message.innerText = 'Tem certeza que deseja excluir este registro?';
+                }
+
+                document.getElementById('deleteItemId').value = id;
+                document.getElementById('deleteForm').action = actionUrl;
+            });
+        }
+    });
+</script>

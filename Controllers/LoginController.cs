@@ -46,7 +46,7 @@ namespace PetShopAgendamento.Controllers
                 HttpContext.Session.SetString("Perfil", usuario.Perfil.ToString());
                 HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
                 HttpContext.Session.SetString("UsuarioNome", usuario.Nome);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Dashboard");
             }
 
             ViewBag.Erro = "Login ou senha inválidos.";

@@ -1,0 +1,57 @@
+﻿@model PetShopAgendamento.Models.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <h1 class="fw-semibold mb-2">Dashboard</h1>
+    <p class="text-muted mb-4">Visão geral do petshop.</p>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-label">Clientes <span><i class="fa-solid fa-people-group"></i></span></div>
+                <div class="kpi-value">@Model.TotalClientes</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-label">Pets <span><i class="fa-solid fa-dog"></i></span></div>
+                <div class="kpi-value">@Model.TotalPets</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-label">Agendamentos hoje <span><i class="fa-solid fa-calendar"></i></span></div>
+                <div class="kpi-value">@Model.AgendamentosHoje</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-label">Serviços ativos <span><i class="fa-solid fa-shower"></i></span></div>
+                <div class="kpi-value">@Model.ServicosAtivos</div>
+            </div>
+        </div>
+    </div>
+
+    <p class="fw-semibold mb-1">Próximos agendamentos</p>
+    <p class="text-muted mb-3">Os 5 próximos compromissos.</p>
+
+    <table class="table table-hover">
+        <thead>
+            <tr><th>Data / Hora</th><th>Cliente</th><th>Pet</th><th>Serviço</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ProximosAgendamentos)
+            {
+                <tr>
+                    <td>@item.Data.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@item.ClienteNome</td>
+                    <td>@item.PetNome</td>
+                    <td>@item.ServicoNome</td>
+                    <td><span class="badge bg-secondary">@item.Status</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

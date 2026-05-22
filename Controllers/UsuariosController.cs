@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PetShopAgendamento.Data;
 using PetShopAgendamento.Filters;
 using PetShopAgendamento.Models;
+using PetShopAgendamento.Models.ViewModels;
 using PetShopAgendamento.Utils;
 using System;
 using System.Collections.Generic;
@@ -72,19 +73,23 @@ namespace PetShopAgendamento.Controllers
         }
 
         // GET: Usuarios/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet]
+        [AutorizacaoFilter("Admin")]
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
+            if (usuario == null) return NotFound();
+
+            var model = new EditUsuarioViewModel
             {
-                return NotFound();
-            }
-            return View(usuario);
+                Id = usuario.Id,
+                Nome = usuario.Nome,
+                Cargo = usuario.Cargo,
+                Email = usuario.Email,
+                Login = usuario.Login,
+                Perfil = usuario.Perfil
+            };
+            return View(model);
         }
 
         // POST: Usuarios/Edit/5
@@ -92,54 +97,64 @@ namespace PetShopAgendamento.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,
-            [Bind("Id,Nome,Cargo,Email,Login,Perfil")] Usuario usuario,
-            string senha, string confirmarSenha)
+        [AutorizacaoFilter("Admin")]
+        public async Task<IActionResult> Edit(EditUsuarioViewModel model)
         {
-            if (id != usuario.Id)
-                return NotFound();
+            // 1. Carregar o usuário do banco (ANTES de qualquer uso)
+            var usuario = await _context.Usuarios.FindAsync(model.Id);
+            if (usuario == null) return NotFound();
 
-            // Buscar o usuário original no banco (para preservar a senha antiga se necessário)
-            var usuarioOriginal = await _context.Usuarios.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
-            if (usuarioOriginal == null)
-                return NotFound();
+            // 2. Verificar se o login já existe em outro usuário
+            if (_context.Usuarios.Any(u => u.Login == model.Login && u.Id != model.Id))
+                ModelState.AddModelError("Login", "Este login já está em uso.");
 
-            if (ModelState.IsValid)
+            // 3. Impedir que o próprio admin mude seu perfil
+            var usuarioLogadoId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioLogadoId == model.Id && model.Perfil != usuario.Perfil)
+                ModelState.AddModelError("Perfil", "Você não pode alterar seu próprio perfil.");
+
+            // 4. Validação da nova senha (usa o usuario carregado para comparar hash)
+            if (!string.IsNullOrEmpty(model.NovaSenha))
             {
-                try
+                if (model.NovaSenha != model.ConfirmarSenha)
+                    ModelState.AddModelError("ConfirmarSenha", "As senhas não conferem.");
+                else if (model.NovaSenha.Length < 4)
+                    ModelState.AddModelError("NovaSenha", "A senha deve ter pelo menos 4 caracteres.");
+                else
                 {
-                    // Se uma nova senha foi fornecida
-                    if (!string.IsNullOrEmpty(senha))
-                    {
-                        // Validar se senha e confirmação são iguais
-                        if (senha != confirmarSenha)
-                        {
-                            ModelState.AddModelError("Senha", "As senhas não conferem.");
-                            return View(usuario);
-                        }
-
-                        // Aplicar hash na nova senha
-                        usuario.Senha = Criptografia.GerarHash(senha);
-                    }
+                    var novoHash = Criptografia.GerarHash(model.NovaSenha);
+                    if (usuario.Senha == novoHash)
+                        ModelState.AddModelError("NovaSenha", "A nova senha não pode ser igual à senha atual.");
                     else
-                    {
-                        // Manter a senha original (não alterada)
-                        usuario.Senha = usuarioOriginal.Senha;
-                    }
+                        usuario.Senha = novoHash;
+                }
+            }
 
-                    _context.Update(usuario);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsuarioExists(usuario.Id))
-                        return NotFound();
-                    else
-                        throw;
-                }
+            // 5. Se houver erro de validação, retorna a view com o model
+            if (!ModelState.IsValid)
+                return View(model);
+
+            // 6. Atualizar os demais campos
+            usuario.Nome = model.Nome!;
+            usuario.Cargo = model.Cargo!;
+            usuario.Email = model.Email;
+            usuario.Login = model.Login!;
+            usuario.Perfil = model.Perfil;
+
+            // 7. Salvar
+            try
+            {
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Usuário atualizado com sucesso.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(usuario);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Usuarios.Any(u => u.Id == model.Id))
+                    return NotFound();
+                else
+                    throw;
+            }
         }
 
         // GET: Usuarios/Delete/5

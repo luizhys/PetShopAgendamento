@@ -1,7 +1,7 @@
-@model PetShopAgendamento.Models.Usuario
+@model PetShopAgendamento.Models.ViewModels.EditUsuarioViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Usuário";
 }
 
 <h1>Edit</h1>
@@ -34,13 +34,18 @@
                 <span asp-validation-for="Login" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Senha" class="control-label"></label>
-                <input asp-for="Senha" class="form-control" />
-                <span asp-validation-for="Senha" class="text-danger"></span>
+                <label>Nova senha (deixe em branco para manter a atual)</label>
+                <input asp-for="NovaSenha" type="password" class="form-control" />
+                <span asp-validation-for="NovaSenha" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Confirmar nova senha</label>
+                <input asp-for="ConfirmarSenha" type="password" class="form-control" />
+                <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Perfil" class="control-label"></label>
-                <select asp-for="Perfil" class="form-control" asp-items="Html.GetEnumSelectList<Perfil>()">
+                <select asp-for="Perfil" class="form-select" asp-items="Html.GetEnumSelectList<Perfil>()">
                     <option value="">Selecione...</option>
                 </select>
                 <span asp-validation-for="Perfil" class="text-danger"></span>

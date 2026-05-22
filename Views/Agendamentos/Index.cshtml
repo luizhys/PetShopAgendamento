@@ -6,11 +6,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Agendamentos</h1>
+<h1 class="fw-semibold mb-2">Agendamentos</h1>
+<p class="text-muted mb-4">Cadastre e gerencie os atendimentos.</p>
 
-<p>
-    <a asp-action="Create">Adicionar</a>
-</p>
+<div class="mb-4">
+    <a asp-action="Create" class="btn btn-teal"><i class="fa-solid fa-plus"></i> Novo agendamento</a>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -28,7 +29,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
-            </th>   <!-- nova coluna -->
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -48,9 +49,9 @@
                 @Html.DisplayFor(modelItem => item.Data)
             </td>
             <td>
-                <form asp-action="UpdateStatus" method="post" style="display:inline">
+                <form asp-action="UpdateStatus" method="post" class="d-flex align-items-center gap-2">
                     <input type="hidden" name="id" value="@item.Id" />
-                    <select name="novoStatus" class="form-control-sm">
+                    <select name="novoStatus" class="form-select form-select-sm w-auto">
                         @foreach (var status in Enum.GetValues(typeof(StatusAgendamento)))
                         {
                             var statusEnum = (StatusAgendamento)status;
@@ -59,15 +60,24 @@
                             </option>
                         }
                     </select>
-                    <button type="submit" class="btn btn-sm btn-primary">Atualizar</button>
+                        <button type="submit" class="btn btn-teal-sm btn-sm"><i class="fa-solid fa-arrows-rotate"></i> Atualizar</button>
                 </form>
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-teal-sm"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn-teal-sm"><i class="fa-solid fa-file-lines"></i> Detalhes</a>
+                <button type="button" class="btn-teal-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#genericDeleteModal"
+                        data-id="@item.Id"
+                        data-nome="Agendamento de @item.Cliente?.Nome para @item.Pet?.Nome em @item.Data.ToString("dd/MM/yyyy")"
+                        data-action-url="@Url.Action("Delete", "Agendamentos")">
+                        <i class="fa-solid fa-trash"></i> Excluir
+                </button>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+@await Html.PartialAsync("_DeleteModal")
