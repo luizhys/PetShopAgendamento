@@ -2,8 +2,18 @@ using Microsoft.EntityFrameworkCore;
 using PetShopAgendamento.Data;
 using PetShopAgendamento.Models;
 using PetShopAgendamento.Services;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Adicionar suporte a cultura pt-BR
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var ptBR = new CultureInfo("pt-BR");
+    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(ptBR);
+    options.SupportedCultures = new[] { ptBR };
+    options.SupportedUICultures = new[] { ptBR };
+});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -29,6 +39,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();          // ← Primeiro o roteamento
+
+app.UseRequestLocalization();
 
 app.UseSession();          // ← Depois a sessão (importante!)
 

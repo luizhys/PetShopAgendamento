@@ -1,5 +1,4 @@
 @model PetShopAgendamento.Models.Agendamento
-@using PetShopAgendamento.Extensions
 
 @{
     ViewData["Title"] = "Detalhes do Agendamento";
@@ -12,7 +11,7 @@
 
 <div class="d-flex justify-content-center">
     <div class="col-12 col-md-6">
-        <div class="card p-3 p-md-4 shadow-sm">
+        <div class="card p-3 p-md-4 shadow-sm mb-4">
             <dl class="row mb-0">
                 <dt class="col-12 col-md-4 fw-semibold">@Html.DisplayNameFor(model => model.Cliente)</dt>
                 <dd class="col-12 col-md-8 mb-3 pb-2 border-bottom">
@@ -34,9 +33,37 @@
                     @Model.Data.ToString("dd/MM/yyyy HH:mm")
                 </dd>
 
-                <dt class="col-12 col-md-4 fw-semibold">@Html.DisplayNameFor(model => model.Status)</dt>
-                <dd class="col-12 col-md-8 mb-3 pb-2 border-bottom">
-                    @Model.Status.GetDisplayName()
+                @{
+                    string badgeClass = "bg-secondary";
+                    string statusTexto = "";
+
+                    switch (Model.Status)
+                    {
+                        case StatusAgendamento.Agendado:
+                            badgeClass = "bg-info text-dark";
+                            statusTexto = "Agendado";
+                            break;
+                        case StatusAgendamento.EmAndamento:
+                            badgeClass = "bg-warning text-dark";
+                            statusTexto = "Em andamento";
+                            break;
+                        case StatusAgendamento.Concluido:
+                            badgeClass = "bg-success";
+                            statusTexto = "Concluído";
+                            break;
+                        case StatusAgendamento.Cancelado:
+                            badgeClass = "bg-danger";
+                            statusTexto = "Cancelado";
+                            break;
+                        default:
+                            statusTexto = Model.Status.ToString();
+                            break;
+                    }
+                }
+
+                <dt class="col-sm-4 fw-semibold">@Html.DisplayNameFor(model => model.Status)</dt>
+                <dd class="col-sm-8 mb-3 pb-2 border-bottom">
+                    <span class="badge @badgeClass rounded-pill px-3">@statusTexto</span>
                 </dd>
             </dl>
 

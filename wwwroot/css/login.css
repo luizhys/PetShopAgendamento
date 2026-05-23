@@ -9,7 +9,6 @@ html, body {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400 700; /* Define o range de pesos que a variável suporta */
-    src: url('/fonts/Inter-Italic-VariableFont_opsz,wght.woff2') format('woff2');
     src: url('/fonts/Inter-VariableFont_opsz,wght.woff2') format('woff2');
     font-display: swap;
 }

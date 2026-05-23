@@ -25,6 +25,8 @@ namespace PetShopAgendamento.Models
         [Required(ErrorMessage = "Porte é obrigatório.")]
         public PorteOpcao Porte { get; set; }
 
+        [Range(0, 999.99, ErrorMessage = "Digite um peso válido (use vírgula para decimais).")]
+        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         public decimal? Peso { get; set; }   // precisão configurada no DbContext
 
         [Display(Name = "Observações")]

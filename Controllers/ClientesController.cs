@@ -8,6 +8,7 @@ using PetShopAgendamento.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PetShopAgendamento.Controllers
@@ -61,10 +62,14 @@ namespace PetShopAgendamento.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,Telefone,Email,Endereco")] Cliente cliente)
         {
+            // Limpa a máscara do telefone
+            cliente.Telefone = Regex.Replace(cliente.Telefone ?? "", @"\D", "");
+
             if (ModelState.IsValid)
             {
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Cliente adicionado com sucesso.";
                 return RedirectToAction(nameof(Index));
             }
             return View(cliente);
@@ -98,12 +103,15 @@ namespace PetShopAgendamento.Controllers
                 return NotFound();
             }
 
+            cliente.Telefone = Regex.Replace(cliente.Telefone ?? "", @"\D", "");
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(cliente);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Cliente atualizado com sucesso.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {

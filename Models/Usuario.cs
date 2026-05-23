@@ -31,7 +31,7 @@ namespace PetShopAgendamento.Models
         public required string Senha { get; set; } // será armazenada com hash
 
         [Required(ErrorMessage = "Selecione um perfil.")]
-        [Range(1, int.MaxValue, ErrorMessage = "Selecione um perfil válido.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Selecione um perfil válido.")]
         public Perfil Perfil { get; set; }
     }
 }

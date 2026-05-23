@@ -11,11 +11,11 @@
 
 <div class="d-flex justify-content-center">
     <div class="col-12 col-md-6">
-        <form asp-action="Edit" class="card p-3 p-md-4 shadow-sm">
+        <form asp-action="Edit" class="card p-3 p-md-4 shadow-sm mb-4">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
             <input type="hidden" asp-for="Id" />
 
-            <div class="form-group mb-3">
+            <div class="form-group mb-4">
                 <label asp-for="Nome" class="form-label fw-semibold"></label>
                 <input asp-for="Nome" class="form-control" />
                 <span asp-validation-for="Nome" class="text-danger"></span>

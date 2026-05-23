@@ -193,6 +193,7 @@ namespace PetShopAgendamento.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Usuário excluído com sucesso.";
             return RedirectToAction(nameof(Index));
         }
 

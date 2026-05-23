@@ -1,2 +1,22 @@
 ﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jquery-validation/methods.js"></script>
+<script src="~/lib/jquery-validation/localization/messages_pt_BR.min.js"></script>
+<script src="~/lib/jquery.mask/jquery.mask.min.js"></script>
+<script>
+    // Adapta a validação de número para aceitar vírgula como separador decimal
+    $.validator.methods.number = function (value, element) {
+    return this.optional(element) || /^-?\d+(?:,\d+)?$/.test(value);
+    };
+
+    // Adapta a validação de range para converter vírgula em ponto antes de comparar
+    $.validator.methods.range = function (value, element, param) {
+    var globalizedValue = value.replace(',', '.');
+    return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+    };
+
+    // Máscara para formatação de telefone
+    $(function() {
+    $('#Telefone').mask('(00) 00000-0000', { unmask: true });
+    });
+</script>

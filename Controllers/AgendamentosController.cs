@@ -6,6 +6,7 @@ using PetShopAgendamento.Filters;
 using PetShopAgendamento.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using static PetShopAgendamento.Models.Agendamento;
@@ -64,12 +65,51 @@ namespace PetShopAgendamento.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClienteId,PetId,ServicoId,Data")] Agendamento agendamento)
+        public async Task<IActionResult> Create([Bind("Id,ClienteId,PetId,ServicoId,Data")] Agendamento agendamento, string dataDate, string dataTime)
         {
+            // Combina data e hora da view
+            if (DateTime.TryParse($"{dataDate} {dataTime}", out var dataCompleta))
+            {
+                agendamento.Data = dataCompleta;
+            }
+            else
+            {
+                ModelState.AddModelError("Data", "Data ou hora inválida.");
+                // Recarrega dropdowns e retorna
+                ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", agendamento.ClienteId);
+                ViewData["PetId"] = new SelectList(_context.Pets, "Id", "Nome", agendamento.PetId);
+                ViewData["ServicoId"] = new SelectList(_context.Servicos, "Id", "Nome", agendamento.ServicoId);
+                return View(agendamento);
+            }
+
+            // Verifica duplicidade de agendamentos
+            var existe = await _context.Agendamentos.AnyAsync(a =>
+                a.ClienteId == agendamento.ClienteId &&
+                a.PetId == agendamento.PetId &&
+                a.ServicoId == agendamento.ServicoId &&
+                a.Data == agendamento.Data);
+
+            if (existe)
+            {
+                ModelState.AddModelError(string.Empty, "Já existe um agendamento com os mesmos dados (cliente, pet, serviço e horário).");
+                // recarrega dropdowns
+                ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", agendamento.ClienteId);
+                ViewData["PetId"] = new SelectList(_context.Pets, "Id", "Nome", agendamento.PetId);
+                ViewData["ServicoId"] = new SelectList(_context.Servicos, "Id", "Nome", agendamento.ServicoId);
+                return View(agendamento);
+            }
+
+            // Não permite criar agendamentos no passado
+            if (agendamento.Data < DateTime.Now)
+            {
+                ModelState.AddModelError("Data", "Não é possível agendar serviços em data/hora passada. Escolha uma data futura.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(agendamento);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Agendamento feito com sucesso.";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", agendamento.ClienteId);
@@ -102,11 +142,49 @@ namespace PetShopAgendamento.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ClienteId,PetId,ServicoId,Data")] Agendamento agendamento)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ClienteId,PetId,ServicoId,Data")] Agendamento agendamento, string dataDate, string dataTime)
         {
             if (id != agendamento.Id)
             {
                 return NotFound();
+            }
+
+            // Combina data e hora da view
+            if (DateTime.TryParse($"{dataDate} {dataTime}", out var dataCompleta))
+            {
+                agendamento.Data = dataCompleta;
+            }
+            else
+            {
+                ModelState.AddModelError("Data", "Data ou hora inválida.");
+                // Recarrega dropdowns e retorna
+                ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", agendamento.ClienteId);
+                ViewData["PetId"] = new SelectList(_context.Pets, "Id", "Nome", agendamento.PetId);
+                ViewData["ServicoId"] = new SelectList(_context.Servicos, "Id", "Nome", agendamento.ServicoId);
+                return View(agendamento);
+            }
+
+            var existe = await _context.Agendamentos.AnyAsync(a =>
+                a.Id != agendamento.Id &&
+                a.ClienteId == agendamento.ClienteId &&
+                a.PetId == agendamento.PetId &&
+                a.ServicoId == agendamento.ServicoId &&
+                a.Data == agendamento.Data);
+
+            if (existe)
+            {
+                ModelState.AddModelError(string.Empty, "Já existe um agendamento com os mesmos dados (cliente, pet, serviço e horário).");
+                // recarrega dropdowns
+                ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", agendamento.ClienteId);
+                ViewData["PetId"] = new SelectList(_context.Pets, "Id", "Nome", agendamento.PetId);
+                ViewData["ServicoId"] = new SelectList(_context.Servicos, "Id", "Nome", agendamento.ServicoId);
+                return View(agendamento);
+            }
+
+            // Não permite criar agendamentos no passado
+            if (agendamento.Data < DateTime.Now)
+            {
+                ModelState.AddModelError("Data", "Não é possível agendar serviços em data/hora passada. Escolha uma data futura.");
             }
 
             if (ModelState.IsValid)
@@ -115,6 +193,7 @@ namespace PetShopAgendamento.Controllers
                 {
                     _context.Update(agendamento);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Agendamento atualizado com sucesso.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -168,6 +247,7 @@ namespace PetShopAgendamento.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Agendamento excluído com sucesso.";
             return RedirectToAction(nameof(Index));
         }
 

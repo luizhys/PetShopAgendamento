@@ -13,6 +13,8 @@ namespace PetShopAgendamento.Models
         public string? Descricao { get; set; }
 
         [Required(ErrorMessage = "Valor é obrigatório.")]
+        [Range(0, 99999.99, ErrorMessage = "Digite um valor numérico válido (use vírgula para decimais).")]
+        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Currency)]
         public decimal Valor { get; set; }  // precisão configurada no DbContext
 

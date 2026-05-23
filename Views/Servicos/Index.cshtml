@@ -45,18 +45,18 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.Nome)</td>
-                    <td class="d-none d-lg-table-cell">@Html.DisplayFor(modelItem => item.Descricao)</td>
+                    <td class="d-none d-lg-table-cell">@(string.IsNullOrEmpty(item.Descricao) ? "—" : item.Descricao)</td>
                     <td>@Html.DisplayFor(modelItem => item.Valor) </td>
                     <td>@Html.DisplayFor(modelItem => item.Duracao) min</td>
                     <td class="text-end">
                         <div class="d-flex gap-2 justify-content-end flex-wrap">
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-teal" title="Editar">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn-teal-sm" title="Editar">
                                 <i class="fas fa-pen"></i>
                             </a>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-teal" title="Detalhes">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-teal-sm" title="Detalhes">
                                 <i class="fas fa-info-circle"></i>
                             </a>
-                            <button type="button" class="btn btn-teal"
+                            <button type="button" class="btn-teal-sm"
                                     data-bs-toggle="modal"
                                     data-bs-target="#genericDeleteModal"
                                     data-id="@item.Id"

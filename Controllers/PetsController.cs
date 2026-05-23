@@ -69,6 +69,7 @@ namespace PetShopAgendamento.Controllers
             {
                 _context.Add(pet);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Pet adicionado com sucesso.";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Nome", pet.ClienteId);
@@ -110,6 +111,7 @@ namespace PetShopAgendamento.Controllers
                 {
                     _context.Update(pet);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Pet atualizado com sucesso.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {

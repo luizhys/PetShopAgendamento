@@ -7,28 +7,28 @@
     <h1 class="fw-semibold mb-2">Dashboard</h1>
     <p class="text-muted mb-4">Visão geral do petshop.</p>
 
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
+    <div class="row g-3 mb-5">
+        <div class="col-6 col-md-3">
             <div class="kpi-card">
-                <div class="kpi-label">Clientes <span><i class="fa-solid fa-people-group"></i></span></div>
+                <div class="kpi-label">Clientes <span><i class="fas fa-user"></i></span></div>
                 <div class="kpi-value">@Model.TotalClientes</div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="kpi-card">
-                <div class="kpi-label">Pets <span><i class="fa-solid fa-dog"></i></span></div>
+                <div class="kpi-label">Pets <span><i class="fas fa-paw"></i></span></div>
                 <div class="kpi-value">@Model.TotalPets</div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="kpi-card">
-                <div class="kpi-label">Agendamentos hoje <span><i class="fa-solid fa-calendar"></i></span></div>
+                <div class="kpi-label">Agendamentos hoje <span><i class="fas fa-calendar-alt"></i></span></div>
                 <div class="kpi-value">@Model.AgendamentosHoje</div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="kpi-card">
-                <div class="kpi-label">Serviços ativos <span><i class="fa-solid fa-shower"></i></span></div>
+                <div class="kpi-label">Serviços ativos <span><i class="fas fa-cut"></i></span></div>
                 <div class="kpi-value">@Model.ServicosAtivos</div>
             </div>
         </div>
@@ -44,12 +44,39 @@
         <tbody>
             @foreach (var item in Model.ProximosAgendamentos)
             {
+                // Define a classe do badge baseada no status (usando Bootstrap)
+                string badgeClass = "bg-secondary"; // padrão
+                string statusTexto = "";
+
+                switch (item.Status)
+                {
+                    case "Agendado":
+                        badgeClass = "bg-info text-dark";
+                        statusTexto = "Agendado";
+                        break;
+                    case "EmAndamento":
+                        badgeClass = "bg-warning text-dark";
+                        statusTexto = "Em andamento";
+                        break;
+                    case "Concluido":
+                        badgeClass = "bg-success";
+                        statusTexto = "Concluído";
+                        break;
+                    case "Cancelado":
+                        badgeClass = "bg-danger";
+                        statusTexto = "Cancelado";
+                        break;
+                    default:
+                        statusTexto = item.Status;
+                        break;
+                }
+
                 <tr>
                     <td>@item.Data.ToString("dd/MM/yyyy HH:mm")</td>
                     <td>@item.ClienteNome</td>
                     <td>@item.PetNome</td>
                     <td>@item.ServicoNome</td>
-                    <td><span class="badge bg-secondary">@item.Status</span></td>
+                    <td><span class="badge @badgeClass rounded-pill px-3">@statusTexto</span></td>
                 </tr>
             }
         </tbody>

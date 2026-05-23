@@ -12,7 +12,7 @@
 
 <div class="d-flex justify-content-center">
     <div class="col-12 col-md-6">
-        <form asp-action="Edit" class="card p-3 p-md-4 shadow-sm">
+        <form asp-action="Edit" class="card p-3 p-md-4 shadow-sm mb-4">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
             <input type="hidden" asp-for="Id" />
 
@@ -38,7 +38,7 @@
 
             <div class="form-group mb-3">
                 <label asp-for="Peso" class="form-label fw-semibold"></label>
-                <input asp-for="Peso" class="form-control" placeholder="Ex: 5,5 kg" />
+                <input asp-for="Peso" class="form-control" placeholder="Peso em quilos" />
                 <span asp-validation-for="Peso" class="text-danger"></span>
             </div>
 

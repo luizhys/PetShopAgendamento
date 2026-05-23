@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,72 +14,102 @@
     <link rel="stylesheet" href="~/PetShopAgendamento.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Index">PetCare</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (Context.Session.GetString("Perfil") != null)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Clientes" asp-action="Index">Clientes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Pets" asp-action="Index">Pets</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Servicos" asp-action="Index">Serviços</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Agendamentos" asp-action="Index">Agendamentos</a>
-                            </li>
+    @{
+        var perfil = Context.Session.GetString("Perfil");
+        var usuarioNome = Context.Session.GetString("UsuarioNome");
+        var controllerAtual = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    }
 
-                            @if (Context.Session.GetString("Perfil") == "Admin")
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Usuarios" asp-action="Index">Usuários</a>
-                                </li>
-                            }
-
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout">
-                                    Sair (@Context.Session.GetString("UsuarioNome"))
-                                </a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Login" asp-action="Index">Login</a>
-                            </li>
-                        }
-                    </ul>
+    @if (!string.IsNullOrEmpty(perfil))
+    {
+        <!-- Layout com sidebar e topbar (usuário autenticado) -->
+        <div class="d-flex" style="min-height: 100vh;">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-brand">
+                    <div class="brand-icon"><i class="fa-solid fa-paw fa-rotate-by" style="color: rgb(255, 255, 255); --fa-rotate-angle: 45deg;"></i></div>
+                    <div>
+                        <div class="brand-name">PetCare</div>
+                        <div class="brand-sub">Sistema interno</div>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+                <nav class="mt-2">
+                    <a asp-controller="Dashboard" asp-action="Index" class="nav-item @(controllerAtual == "Dashboard" ? "active" : "")">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a>
+                    <a asp-controller="Clientes" asp-action="Index" class="nav-item @(controllerAtual == "Clientes" ? "active" : "")">
+                        <i class="fas fa-user"></i> Clientes
+                    </a>
+                    <a asp-controller="Pets" asp-action="Index" class="nav-item @(controllerAtual == "Pets" ? "active" : "")">
+                        <i class="fas fa-paw"></i> Pets
+                    </a>
+                    <a asp-controller="Agendamentos" asp-action="Index" class="nav-item @(controllerAtual == "Agendamentos" ? "active" : "")">
+                        <i class="fas fa-calendar-alt"></i> Agendamentos
+                    </a>
+                    <a asp-controller="Servicos" asp-action="Index" class="nav-item @(controllerAtual == "Servicos" ? "active" : "")">
+                        <i class="fas fa-cut"></i> Serviços
+                    </a>
+                    @if (perfil == "Admin")
+                    {
+                        <a asp-controller="Usuarios" asp-action="Index" class="nav-item @(controllerAtual == "Usuarios" ? "active" : "")">
+                            <i class="fas fa-users"></i> Usuários
+                        </a>
+                    }
+                </nav>
+            </aside>
 
-    <footer class="border-top footer text-muted text-center">
-        <div class="container">
-            &copy; 2026 - PetCare<!-- - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>-->
+            <!-- Conteúdo principal -->
+            <div class="main-content w-100">
+                <!-- Topbar -->
+                <div class="topbar">
+                    <div class="d-flex align-items-center">
+                        <button class="menu-toggle me-2" id="menuToggle" aria-label="Abrir menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div class="topbar-info">
+                            <i class="fas fa-user-circle me-1"></i> Painel administrativo — <strong>@usuarioNome</strong>
+                        </div>
+                    </div>
+                    <a asp-controller="Login" asp-action="Logout" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-sign-out-alt me-1"></i> Sair
+                    </a>
+                </div>
+
+                <!-- Views -->
+                <div class="content-wrapper">
+                    <main role="main">
+                        @RenderBody()
+                    </main>
+                </div>
+
+            </div>
         </div>
-    </footer>
+    }
+    else
+    {
+        <!-- Layout para não autenticado -->
+        <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+            <div class="col-12 col-md-6">
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    }
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Toggle da sidebar em telas pequenas
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('open');
+        });
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
