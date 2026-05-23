@@ -1,11 +1,18 @@
 @model IEnumerable<PetShopAgendamento.Models.Pet>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Pets";
 }
 
-<h1 class="fw-semibold mb-2">Pets</h1>
-<p class="text-muted mb-4">Cadastre e gerencie os pets vinculados aos clientes.</p>
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
+    <div>
+        <h1 class="fw-semibold mb-1">Pets</h1>
+        <p class="text-muted">Gerencie os animais cadastrados.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-teal">
+        <i class="fas fa-plus"></i> Adicionar Pet
+    </a>
+</div>
 
 @if (TempData["ErrorMessage"] != null)
 {
@@ -22,69 +29,50 @@
     </div>
 }
 
-<div class="mb-4">
-    <a asp-action="Create" class="btn btn-teal"><i class="fa-solid fa-plus"></i> Novo pet</a>
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Nome)</th>
+                <th class="d-none d-lg-table-cell">@Html.DisplayNameFor(model => model.Raca)</th>   <!-- oculta em telas < 992px -->
+                <th>@Html.DisplayNameFor(model => model.Porte)</th>
+                <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.Peso)</th>    <!-- oculta em telas < 768px -->
+                <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.Cliente)</th> <!-- oculta em telas < 768px -->
+                <th class="text-end">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                    <td class="d-none d-lg-table-cell">@Html.DisplayFor(modelItem => item.Raca)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Porte)</td>
+                    <td class="d-none d-md-table-cell">@Html.DisplayFor(modelItem => item.Peso) kg</td>
+                    <td class="d-none d-md-table-cell">@Html.DisplayFor(modelItem => item.Cliente!.Nome)</td>
+                    <td class="text-end">
+                        <div class="d-flex gap-2 justify-content-end flex-wrap">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-teal" title="Editar">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-teal" title="Detalhes">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                            <button type="button" class="btn btn-teal"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#genericDeleteModal"
+                                    data-id="@item.Id"
+                                    data-nome="@item.Nome"
+                                    data-action-url="@Url.Action("Delete", "Pets")"
+                                    title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Raca)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Porte)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Peso)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Observacoes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cliente)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Raca)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Porte)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Peso)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Observacoes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cliente!.Endereco)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-teal-sm"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn-teal-sm"><i class="fa-solid fa-file-lines"></i> Detalhes</a>
-                <button type="button" class="btn-teal-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#genericDeleteModal"
-                        data-id="@item.Id"
-                        data-nome="@item.Nome"
-                        data-action-url="@Url.Action("Delete", "Pets")">
-                        <i class="fa-solid fa-trash"></i> Excluir
-                </button>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
 
 @await Html.PartialAsync("_DeleteModal")

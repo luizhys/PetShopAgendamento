@@ -11,7 +11,6 @@
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400 700; /* Define o range de pesos que a variável suporta */
-    src: url('/fonts/Inter-Italic-VariableFont_opsz,wght.woff2') format('woff2');
     src: url('/fonts/Inter-VariableFont_opsz,wght.woff2') format('woff2');
     font-display: swap;
 }
@@ -203,50 +202,6 @@ body {
     .btn-teal:hover {
         background: var(--teal-h);
         color: #fff;
-    }
-
-/* BOTÕES MENORES */
-
-.btn-teal-sm {
-    background: var(--teal);
-    border: none;
-    color: #fff;
-    font-size: 12px;
-    padding: 7px 15px;
-    border-radius: 6px;
-    text-decoration: none
-}
-
-    .btn-teal-sm:hover {
-        background: var(--teal-h);
-        color: #fff;
-    }
-
-/* Garante que links e botões usem o mesmo modelo de caixa */
-a.btn-teal-sm,
-button.btn-teal-sm {
-    display: inline-flex; /* alinha ícone e texto verticalmente */
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px; /* mesmo padding */
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 1.5;
-    text-align: center;
-    text-decoration: none;
-    background: var(--teal);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-    a.btn-teal-sm:hover,
-    button.btn-teal-sm:hover {
-        background: var(--teal-h);
-        color: #fff;
-        text-decoration: none;
     }
 
 /* Remove estilos extras do botão que podem influenciar */

@@ -1,11 +1,18 @@
 @model IEnumerable<PetShopAgendamento.Models.Usuario>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Usuários";
 }
 
-<h1 class="fw-semibold mb-2">Usuários</h1>
-<p class="text-muted mb-4">Cadastre e gerencie os usuários do sistema.</p>
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
+    <div>
+        <h1 class="fw-semibold mb-1">Usuários</h1>
+        <p class="text-muted">Gerencie os usuários do sistema (administradores e funcionários).</p>
+    </div>
+    <a asp-action="Create" class="btn btn-teal">
+        <i class="fas fa-plus"></i> Adicionar Usuário
+    </a>
+</div>
 
 @if (TempData["ErrorMessage"] != null)
 {
@@ -22,66 +29,59 @@
     </div>
 }
 
-<div class="mb-4">
-    <a asp-action="Create" class="btn btn-teal"><i class="fa-solid fa-plus"></i> Novo usuário</a>
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Nome)</th>
+                <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.Cargo)</th>
+                <th class="d-none d-lg-table-cell">@Html.DisplayNameFor(model => model.Email)</th>
+                <th>@Html.DisplayNameFor(model => model.Login)</th>
+                <th>@Html.DisplayNameFor(model => model.Perfil)</th>
+                <th class="text-end">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                    <td class="d-none d-md-table-cell">@Html.DisplayFor(modelItem => item.Cargo)</td>
+                    <td class="d-none d-lg-table-cell">@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Login)</td>
+                    <td>@(item.Perfil == Perfil.Admin ? "Administrador" : "Funcionário")</td>
+                    <td class="text-end">
+                        <div class="d-flex gap-2 justify-content-end flex-wrap">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-teal" title="Editar">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-teal" title="Detalhes">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                            @if (item.Perfil != Perfil.Admin)
+                            {
+                                <button type="button" class="btn btn-teal"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#genericDeleteModal"
+                                        data-id="@item.Id"
+                                        data-nome="@item.Nome"
+                                        data-action-url="@Url.Action("Delete", "Usuarios")"
+                                        title="Excluir">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <span class="btn btn-teal disabled" title="Administradores não podem ser excluídos">
+                                    <i class="fas fa-trash"></i>
+                                </span>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cargo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Login)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Perfil)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cargo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Login)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Perfil)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-teal-sm"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn-teal-sm"><i class="fa-solid fa-file-lines"></i> Detalhes</a>
-                @if (item.Perfil != Perfil.Admin)
-                {
-                    <button type="button" class="btn-teal-sm"
-                            data-bs-toggle="modal"
-                            data-bs-target="#genericDeleteModal"
-                            data-id="@item.Id"
-                            data-nome="@item.Nome"
-                            data-action-url="@Url.Action("Delete", "Usuarios")">
-                        <i class="fa-solid fa-trash"></i> Excluir
-                    </button>
-                }
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
 
 @await Html.PartialAsync("_DeleteModal")

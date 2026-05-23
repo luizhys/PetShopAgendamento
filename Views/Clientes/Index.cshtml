@@ -1,11 +1,18 @@
 @model IEnumerable<PetShopAgendamento.Models.Cliente>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Clientes";
 }
 
-<h1 class="fw-semibold mb-2">Clientes</h1>
-<p class="text-muted mb-4">Cadastre e gerencie os clientes do petshop.</p>
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3 gap-2">
+    <div>
+        <h1 class="fw-semibold mb-1">Clientes</h1>
+        <p class="text-muted">Gerencie os clientes cadastrados.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-teal">
+        <i class="fas fa-plus"></i> Adicionar Cliente
+    </a>
+</div>
 
 @if (TempData["ErrorMessage"] != null)
 {
@@ -22,57 +29,48 @@
     </div>
 }
 
-<div class="mb-4">
-    <a asp-action="Create" class="btn btn-teal"><i class="fa-solid fa-plus"></i> Novo cliente</a>
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Nome)</th>
+                <th>@Html.DisplayNameFor(model => model.Telefone)</th>
+                <th class="d-none d-md-table-cell">@Html.DisplayNameFor(model => model.Email)</th>
+                <th class="d-none d-lg-table-cell">@Html.DisplayNameFor(model => model.Endereco)</th>
+                <th class="text-end">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Nome)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Telefone)</td>
+                    <td class="d-none d-md-table-cell">@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td class="d-none d-lg-table-cell">@Html.DisplayFor(modelItem => item.Endereco)</td>
+                    <td class="text-end">
+                        <div class="d-flex gap-1 gap-sm-2 justify-content-end flex-wrap">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-teal" title="Editar">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-teal" title="Detalhes">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                            <button type="button" class="btn btn-teal"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#genericDeleteModal"
+                                    data-id="@item.Id"
+                                    data-nome="@item.Nome"
+                                    data-action-url="@Url.Action("Delete", "Clientes")"
+                                    title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telefone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Endereco)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Endereco)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-teal-sm"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn-teal-sm"><i class="fa-solid fa-file-lines"></i> Detalhes</a>
-                <button type="button" class="btn-teal-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#genericDeleteModal"
-                        data-id="@item.Id"
-                        data-nome="@item.Nome"
-                        data-action-url="@Url.Action("Delete", "Clientes")">
-                        <i class="fa-solid fa-trash"></i> Excluir
-                </button>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
 
 @await Html.PartialAsync("_DeleteModal")

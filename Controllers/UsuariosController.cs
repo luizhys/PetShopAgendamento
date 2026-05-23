@@ -60,6 +60,12 @@ namespace PetShopAgendamento.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,Cargo,Email,Login,Senha,Perfil")] Usuario usuario)
         {
+            // Validação personalizada: senha deve ter pelo menos 4 caracteres
+            if (string.IsNullOrEmpty(usuario.Senha) || usuario.Senha.Length < 4)
+            {
+                ModelState.AddModelError("Senha", "A senha deve ter pelo menos 4 caracteres.");
+            }
+
             if (ModelState.IsValid)
             {
                 // Aplica hash na senha

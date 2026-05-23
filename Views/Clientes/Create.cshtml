@@ -1,48 +1,57 @@
 @model PetShopAgendamento.Models.Cliente
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Adicionar Cliente";
 }
 
-<h1>Create</h1>
+<div class="text-center mb-4">
+    <h1 class="fw-semibold">Adicionar Cliente</h1>
+    <p class="text-muted">Cadastre um novo cliente no sistema.</p>
+</div>
 
-<h4>Cliente</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
+<div class="d-flex justify-content-center">
+    <div class="col-12 col-md-6">
+        <form asp-action="Create" class="card p-3 p-md-4 shadow-sm">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Nome" class="form-label fw-semibold"></label>
+                <input asp-for="Nome" class="form-control" placeholder="Nome completo" />
                 <span asp-validation-for="Nome" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Telefone" class="control-label"></label>
-                <input asp-for="Telefone" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Telefone" class="form-label fw-semibold"></label>
+                <input asp-for="Telefone" class="form-control" placeholder="(00) 00000-0000" />
                 <span asp-validation-for="Telefone" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="form-label fw-semibold"></label>
+                <input asp-for="Email" class="form-control" placeholder="cliente@email.com" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Endereco" class="control-label"></label>
-                <input asp-for="Endereco" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Endereco" class="form-label fw-semibold"></label>
+                <input asp-for="Endereco" class="form-control" placeholder="Rua, número, cidade..." />
                 <span asp-validation-for="Endereco" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end mt-3">
+                <a asp-action="Index" class="btn btn-teal">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+                <button type="submit" class="btn btn-teal">
+                    <i class="fas fa-plus"></i> Adicionar
+                </button>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -1,60 +1,71 @@
 @model PetShopAgendamento.Models.Usuario
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Adicionar Usuário";
 }
 
-<h1>Create</h1>
+<div class="text-center mb-4">
+    <h1 class="fw-semibold">Adicionar Usuário</h1>
+    <p class="text-muted">Cadastre um novo funcionário ou administrador.</p>
+</div>
 
-<h4>Usuario</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
+<div class="d-flex justify-content-center">
+    <div class="col-12 col-md-6">
+        <form asp-action="Create" class="card p-3 p-md-4 shadow-sm">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Nome" class="form-label fw-semibold"></label>
+                <input asp-for="Nome" class="form-control" placeholder="Nome completo" />
                 <span asp-validation-for="Nome" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Cargo" class="control-label"></label>
-                <input asp-for="Cargo" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Cargo" class="form-label fw-semibold"></label>
+                <input asp-for="Cargo" class="form-control" placeholder="Ex: Atendente, Gerente" />
                 <span asp-validation-for="Cargo" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="form-label fw-semibold"></label>
+                <input asp-for="Email" class="form-control" placeholder="usuario@email.com" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Login" class="control-label"></label>
-                <input asp-for="Login" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Login" class="form-label fw-semibold"></label>
+                <input asp-for="Login" class="form-control" placeholder="Login para acesso" />
                 <span asp-validation-for="Login" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Senha" class="control-label"></label>
-                <input asp-for="Senha" type="password" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Senha" class="form-label fw-semibold"></label>
+                <input asp-for="Senha" type="password" class="form-control" placeholder="Mínimo 4 caracteres" />
                 <span asp-validation-for="Senha" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Perfil" class="control-label"></label>
+
+            <div class="form-group mb-3">
+                <label asp-for="Perfil" class="form-label fw-semibold"></label>
                 <select asp-for="Perfil" class="form-select" asp-items="Html.GetEnumSelectList<Perfil>()">
                     <option value="">Selecione...</option>
                 </select>
                 <span asp-validation-for="Perfil" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end mt-3">
+                <a asp-action="Index" class="btn btn-teal">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+                <button type="submit" class="btn btn-teal">
+                    <i class="fas fa-plus"></i> Adicionar
+                </button>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
